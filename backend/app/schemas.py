@@ -17,7 +17,7 @@ class JobDescription(JobDescriptionBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Changed from orm_mode = True
 
 class CandidateBase(BaseModel):
     name: str
@@ -34,7 +34,7 @@ class Candidate(CandidateBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Changed from orm_mode = True
 
 class ApplicationBase(BaseModel):
     job_id: int
@@ -50,7 +50,7 @@ class Application(ApplicationBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Changed from orm_mode = True
 
 class InterviewBase(BaseModel):
     application_id: int
@@ -67,4 +67,4 @@ class Interview(InterviewBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Changed from orm_mode = True

@@ -1,5 +1,5 @@
 from fastapi import UploadFile
-from langchain.llms import OpenAI
+from langchain_community.llms import OpenAI
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 import PyPDF2
@@ -43,8 +43,12 @@ async def parse_resume(file: UploadFile) -> dict:
             """
         )
 
-        # Initialize LLM chain
-        llm = OpenAI(api_key=settings.OPENAI_API_KEY)
+        # Initialize LLM chain with temperature parameter for more consistent output
+        llm = OpenAI(
+            api_key=settings.OPENAI_API_KEY,
+            temperature=0.1,
+            model_name="gpt-3.5-turbo"
+        )
         chain = LLMChain(llm=llm, prompt=prompt)
 
         # Process resume text
@@ -54,6 +58,9 @@ async def parse_resume(file: UploadFile) -> dict:
         candidate_logger.info(f"Successfully parsed resume for {parsed_data['name']}")
         return parsed_data
 
+    except json.JSONDecodeError as e:
+        candidate_logger.error(f"Error parsing JSON response: {str(e)}")
+        raise Exception("Failed to parse LLM response into JSON format")
     except Exception as e:
         candidate_logger.error(f"Error parsing resume: {str(e)}")
         raise Exception(f"Failed to parse resume: {str(e)}")

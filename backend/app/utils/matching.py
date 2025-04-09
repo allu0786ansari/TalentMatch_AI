@@ -1,8 +1,16 @@
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS
 from .. import models
 from typing import List
 import numpy as np
+
+def process_job_description(job_id: int) -> None:
+    """
+    Process and analyze job description after creation
+    """
+    # This function is called from the jobs router
+    # Add your job processing logic here
+    pass
 
 def calculate_skill_match(required_skills: List[str], candidate_skills: List[str]) -> float:
     embeddings = OpenAIEmbeddings()
