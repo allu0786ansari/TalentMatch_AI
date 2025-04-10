@@ -1,6 +1,8 @@
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional, Dict
 from datetime import datetime
+from pydantic.config import ConfigDict
+
 
 class JobDescriptionBase(BaseModel):
     title: str
@@ -16,8 +18,7 @@ class JobDescription(JobDescriptionBase):
     id: int
     created_at: datetime
 
-    class Config:
-        from_attributes = True  # Changed from orm_mode = True
+    model_config = ConfigDict(from_attributes=True)  # Updated
 
 class CandidateBase(BaseModel):
     name: str
@@ -33,8 +34,7 @@ class Candidate(CandidateBase):
     id: int
     created_at: datetime
 
-    class Config:
-        from_attributes = True  # Changed from orm_mode = True
+    model_config = ConfigDict(from_attributes=True)  # Updated
 
 class ApplicationBase(BaseModel):
     job_id: int
@@ -49,8 +49,7 @@ class Application(ApplicationBase):
     id: int
     created_at: datetime
 
-    class Config:
-        from_attributes = True  # Changed from orm_mode = True
+    model_config = ConfigDict(from_attributes=True)  # Updated
 
 class InterviewBase(BaseModel):
     application_id: int
@@ -66,5 +65,4 @@ class Interview(InterviewBase):
     status: str
     created_at: datetime
 
-    class Config:
-        from_attributes = True  # Changed from orm_mode = True
+    model_config = ConfigDict(from_attributes=True)  # Updated

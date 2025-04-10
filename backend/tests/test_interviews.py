@@ -22,7 +22,7 @@ def test_job(test_db):
     """
     Mock job entry for testing.
     """
-    job = models.Job(
+    job = models.JobDescription(
         title="Software Developer",
         required_skills=["Python", "SQL", "FastAPI"],
         min_experience=3
