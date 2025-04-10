@@ -1,25 +1,25 @@
-fastapi==0.95.2                # Compatible with modern FastAPI features
+fastapi==0.103.1               # Compatible with Pydantic v2.x
 uvicorn==0.22.0                # Compatible with FastAPI
 sqlalchemy==2.0.20             # Stable version for SQLAlchemy
-pydantic==2.6.1                # Compatible with Pydantic v2
-pydantic-settings==2.1.1       # Works with Pydantic v2
+pydantic==2.7.4                # Compatible with FastAPI 0.103.1 and pydantic-settings
+pydantic-settings==2.3.3       # Compatible with Pydantic v2.7.4
 python-dotenv==1.0.0           # For environment variable management
 langchain==0.0.329             # Updated for compatibility with langchain-community
 langchain-community==0.0.21    # Compatible with langchain
 openai==0.28.0                 # Updated OpenAI library
 python-multipart==0.0.6        # For handling file uploads in FastAPI
-fastapi-mail==1.2.1            # Compatible with FastAPI
+fastapi-mail==1.4.1            # Compatible with FastAPI
 python-jose[cryptography]==3.3.0  # For JWT handling
 passlib[bcrypt]==1.7.4         # For password hashing
 pytest==7.4.0                  # For testing
-pytest-asyncio==0.21.0         # For async tests
+pytest-asyncio==0.23.5         # For async tests
 PyPDF2==3.0.1                  # For PDF parsing
-jinja2==3.1.2                  # For email templates
+jinja2==3.1.3                  # For email templates
 pika==1.3.1                    # For RabbitMQ integration
 numpy==1.26.0                  # For numerical operations
-redis==4.5.5                   # For Redis integration
+redis==5.0.1                   # For Redis integration
 faiss-cpu==1.7.4               # For vector similarity search
 requests==2.31.0               # For HTTP requests
-email-validator==1.3.1         # For email validation
+email-validator==2.1.0.post1   # For email validation
 aiofiles==23.1.0               # For async file handling
 pyasn1==0.4.8                  # For ASN.1 encoding/decoding
