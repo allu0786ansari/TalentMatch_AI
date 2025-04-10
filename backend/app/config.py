@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     OPENAI_API_KEY: Optional[str] = None
+    GOOGLE_API_KEY: Optional[str] = None 
     
     # Email settings
     SMTP_HOST: str = "smtp.gmail.com"
