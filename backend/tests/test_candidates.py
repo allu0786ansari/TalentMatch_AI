@@ -1,9 +1,9 @@
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
-from ..main import app
-from .. import models
-from ..database import get_db
+from backend.app.main import app
+from backend.app import models
+from backend.app.database import get_db
 
 @pytest.fixture
 def test_db(session: Session):

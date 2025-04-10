@@ -2,9 +2,9 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
-from ..main import app
-from .. import models
-from ..database import get_db
+from app.main import app
+from app import models
+from app.database import get_db
 
 @pytest.fixture
 def test_db(session: Session):

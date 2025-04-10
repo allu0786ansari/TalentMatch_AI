@@ -1,6 +1,6 @@
 import pytest
 from fastapi import UploadFile
-from ..utils.resume_parser import parse_resume
+from app.utils.resume_parser import parse_resume
 import io
 from unittest.mock import MagicMock
 
