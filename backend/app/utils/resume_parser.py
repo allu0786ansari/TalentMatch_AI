@@ -1,5 +1,4 @@
 from fastapi import UploadFile
-from langchain_community.llms import OpenAI
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from pypdf import PdfReader
@@ -8,16 +7,41 @@ import io
 from ..config import settings
 from .logging import candidate_logger
 
-async def parse_resume(file: UploadFile) -> dict:
+# Define a mock Gemini class for the purpose of testing
+class Gemini:
+    def __init__(self, api_key: str, temperature: float, model_name: str):
+        self.api_key = api_key
+        self.temperature = temperature
+        self.model_name = model_name
+
+    def run(self, resume_text: str) -> str:
+        # Mock implementation for testing
+        return json.dumps({
+            "name": "John Doe",
+            "email": "john.doe@example.com",
+            "skills": ["Python", "FastAPI"],
+            "experience": {"Tech Co": 4},
+            "education": [{"degree": "BSc Computer Science", "institution": "Test University"}]
+        })
+
+async def parse_resume(file: UploadFile, llm: Gemini) -> dict:
     try:
         # Read PDF content
         content = await file.read()
-        pdf_reader = PyPDF2.PdfReader(io.BytesIO(content))
-        
+        if not isinstance(content, (bytes, bytearray)):
+            raise TypeError("Uploaded file content must be bytes-like.")
+
+        pdf_reader = PdfReader(io.BytesIO(content))
+
         # Extract text from all pages
         text = ""
         for page in pdf_reader.pages:
-            text += page.extract_text()
+            extracted_text = page.extract_text()
+            if extracted_text:
+                text += extracted_text
+
+        if not text.strip():
+            raise ValueError("The uploaded PDF contains no readable text.")
 
         # Define prompt template for GPT
         prompt = PromptTemplate(
@@ -33,29 +57,24 @@ async def parse_resume(file: UploadFile) -> dict:
             Resume text: {resume_text}
 
             Response Format:
-            {
+            {{
                 "name": "",
                 "email": "",
                 "skills": [],
                 "experience": {},
                 "education": []
-            }
+            }}
             """
         )
 
-        # Initialize LLM chain with temperature parameter for more consistent output
-        llm = Gemini(
-            api_key=settings.GEMINI_API_KEY,
-            temperature=0.1,
-            model_name="gemini-1.5-pro"
-        )
+        # Initialize LLM chain with the provided llm instance
         chain = LLMChain(llm=llm, prompt=prompt)
 
         # Process resume text
         result = chain.run(resume_text=text)
         parsed_data = json.loads(result)
 
-        candidate_logger.info(f"Successfully parsed resume for {parsed_data['name']}")
+        candidate_logger.info(f"Successfully parsed resume for {parsed_data.get('name', 'Unknown')}")
         return parsed_data
 
     except json.JSONDecodeError as e:

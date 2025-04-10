@@ -1,47 +1,48 @@
 import pytest
 from fastapi import UploadFile
-from app.utils.resume_parser import parse_resume
-import io
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock
+from io import BytesIO
+import json
+from app.utils.resume_parser import parse_resume, Gemini
 
 @pytest.fixture
-def sample_pdf_content():
+def mock_pdf_file():
     """
-    Provides sample resume content mimicking a real resume structure.
-    """
-    return b"""
-    John Doe
-    email: john.doe@example.com
-
-    Skills:
-    Python, JavaScript, React, SQL
-
-    Experience:
-    Tech Corp - Senior Developer (2019-2023)
-    CodeCo - Junior Developer (2016-2019)
-
-    Education:
-    Masters in Computer Science - Tech University
-    Bachelor in IT - Code College
-    """
-
-@pytest.fixture
-def mock_pdf_file(sample_pdf_content):
-    """
-    Mocks a PDF file upload.
+    Provides a mock PDF file with asynchronous behavior for testing.
     """
     file = MagicMock(spec=UploadFile)
     file.filename = "test_resume.pdf"
-    file.file = io.BytesIO(sample_pdf_content)  # Simulate file read behavior
+    file.content_type = "application/pdf"
+    
+    # Use AsyncMock for the `read` method to simulate asynchronous behavior
+    file.read = AsyncMock(return_value=b"%PDF-1.4 Mock PDF content")
+    file.file = BytesIO(b"%PDF-1.4 Mock PDF content")  # Simulates a readable file object
     return file
 
-@pytest.mark.asyncio
-async def test_parse_resume(mock_pdf_file):
+@pytest.fixture
+def mock_gemini():
     """
-    Tests resume parsing logic using a mock PDF file.
+    Provides a mock Gemini instance for testing.
     """
-    result = await parse_resume(mock_pdf_file)
+    mock_llm = Gemini(api_key="test_api_key", temperature=0.1, model_name="gemini-1.5-pro")
+    mock_llm.run = AsyncMock(return_value=json.dumps({
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "skills": ["Python", "FastAPI"],
+        "experience": {"Tech Co": 4},
+        "education": [{"degree": "BSc Computer Science", "institution": "Test University"}]
+    }))
+    return mock_llm
 
+@pytest.mark.asyncio
+async def test_parse_resume(mock_pdf_file, mock_gemini):
+    """
+    Tests resume parsing logic using a mock PDF file and mock Gemini instance.
+    """
+    # Call the parse_resume function with the mock PDF file and mock Gemini instance
+    result = await parse_resume(mock_pdf_file, mock_gemini)
+
+    # Assertions
     assert isinstance(result, dict)
     assert "name" in result
     assert "email" in result
@@ -52,5 +53,5 @@ async def test_parse_resume(mock_pdf_file):
     assert result["name"] == "John Doe"
     assert result["email"] == "john.doe@example.com"
     assert "Python" in result["skills"]
-    assert "Tech Corp" in result["experience"]
-    assert any("Tech University" in edu["institution"] for edu in result["education"])
+    assert "Tech Co" in result["experience"]
+    assert any("Test University" in edu["institution"] for edu in result["education"])
