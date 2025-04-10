@@ -2,7 +2,7 @@ from fastapi import UploadFile
 from langchain_community.llms import OpenAI
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
-import PyPDF2
+from pypdf import PdfReader
 import json
 import io
 from ..config import settings
@@ -44,10 +44,10 @@ async def parse_resume(file: UploadFile) -> dict:
         )
 
         # Initialize LLM chain with temperature parameter for more consistent output
-        llm = OpenAI(
-            api_key=settings.OPENAI_API_KEY,
+        llm = Gemini(
+            api_key=settings.GEMINI_API_KEY,
             temperature=0.1,
-            model_name="gpt-3.5-turbo"
+            model_name="gemini-1.5-pro"
         )
         chain = LLMChain(llm=llm, prompt=prompt)
 

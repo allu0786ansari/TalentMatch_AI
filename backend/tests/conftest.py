@@ -2,17 +2,28 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.database import Base
-from app.config import settings
+import os
 
 # Create test database engine
-TEST_DATABASE_URL = "sqlite:///./test.db"
+TEST_DATABASE_URL = "sqlite:///./tests/test.db"  # Test database path
 engine = create_engine(
     TEST_DATABASE_URL, connect_args={"check_same_thread": False}
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
+def cleanup_test_db():
+    """
+    Ensures that any pre-existing test database is removed before tests run.
+    """
+    if os.path.exists("./tests/test.db"):
+        os.remove("./tests/test.db")
+
+@pytest.fixture(scope="function")
 def db_engine():
+    """
+    Creates and tears down the test database engine for each function test.
+    """
     # Create test database tables
     Base.metadata.create_all(bind=engine)
     yield engine
@@ -21,20 +32,25 @@ def db_engine():
 
 @pytest.fixture(scope="function")
 def session(db_engine):
-    # Create a new database session for a test
+    """
+    Provides a database session for each test, ensuring transaction rollback
+    to maintain test isolation.
+    """
     connection = db_engine.connect()
     transaction = connection.begin()
     session = TestingSessionLocal(bind=connection)
-    
-    yield session
-    
-    # Roll back the transaction and close the session
-    session.close()
-    transaction.rollback()
-    connection.close()
+    try:
+        yield session
+    finally:
+        session.close()
+        transaction.rollback()
+        connection.close()
 
 @pytest.fixture(scope="session")
 def test_job_data():
+    """
+    Example test data for job endpoints, validated against schemas if necessary.
+    """
     return {
         "title": "Senior Python Developer",
         "required_skills": ["Python", "FastAPI", "SQL", "Docker"],
@@ -45,6 +61,9 @@ def test_job_data():
 
 @pytest.fixture(scope="session")
 def test_candidate_data():
+    """
+    Example test data for candidate endpoints, validated against schemas if necessary.
+    """
     return {
         "name": "Jane Smith",
         "email": "jane.smith@example.com",
@@ -67,6 +86,9 @@ def test_candidate_data():
 
 @pytest.fixture(scope="session")
 def test_interview_data():
+    """
+    Example test data for interview endpoints, validated against schemas if necessary.
+    """
     return {
         "interview_type": "technical",
         "scheduled_time": "2024-04-15T10:00:00",

@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
+app = FastAPI()
+
 # Import local modules
 from app.routers import jobs, candidates, matches, interviews
 from app.database import engine
