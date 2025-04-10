@@ -42,7 +42,9 @@ def test_candidate(test_db):
         name="Test Developer",
         email="test@example.com",
         skills=["Python", "FastAPI", "MongoDB"],
-        experience={"Tech Co": "4 years"},
+        experience={
+            "Tech Co": {"years": 4}  # Updated to match the expected structure
+        },
         education=[{"degree": "BSc Computer Science", "institution": "Test University"}]
     )
     test_db.add(candidate)
