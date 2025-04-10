@@ -31,6 +31,7 @@ def test_job(test_db):
     )
     test_db.add(job)
     test_db.commit()
+    test_db.refresh(job)  # Ensure the object is refreshed and attached to the session
     return job
 
 @pytest.fixture
@@ -49,6 +50,7 @@ def test_candidate(test_db):
     )
     test_db.add(candidate)
     test_db.commit()
+    test_db.refresh(candidate)  # Ensure the object is refreshed and attached to the session
     return candidate
 
 @pytest.fixture
@@ -69,12 +71,16 @@ def test_match_candidates(client, test_job, test_candidate):
     """
     Tests matching candidates to a job.
     """
-    response = client.post(f"/api/v1/matches/match/{test_job.id}")
+    # Fetch IDs early to avoid DetachedInstanceError
+    job_id = test_job.id
+    candidate_id = test_candidate.id
+
+    response = client.post(f"/api/v1/matches/match/{job_id}")
     assert response.status_code == HTTPStatus.OK
     data = response.json()
     assert len(data) > 0
-    assert data[0]["job_id"] == test_job.id
-    assert data[0]["candidate_id"] == test_candidate.id
+    assert data[0]["job_id"] == job_id
+    assert data[0]["candidate_id"] == candidate_id
     assert "match_score" in data[0]
     assert data[0]["status"] in ["pending", "shortlisted"]
 
@@ -82,10 +88,14 @@ def test_get_job_applications(client, test_job, test_candidate, test_db):
     """
     Tests retrieving applications for a job.
     """
+    # Fetch IDs early to avoid DetachedInstanceError
+    job_id = test_job.id
+    candidate_id = test_candidate.id
+
     # Create a test application
     application = models.Application(
-        job_id=test_job.id,
-        candidate_id=test_candidate.id,
+        job_id=job_id,
+        candidate_id=candidate_id,
         match_score=0.85,
         status="shortlisted"
     )
@@ -93,13 +103,13 @@ def test_get_job_applications(client, test_job, test_candidate, test_db):
     test_db.commit()
 
     # Verify the application exists in the database before calling API
-    stored_application = test_db.query(models.Application).filter_by(job_id=test_job.id).first()
+    stored_application = test_db.query(models.Application).filter_by(job_id=job_id).first()
     assert stored_application is not None
     assert stored_application.match_score == 0.85
 
-    response = client.get(f"/api/v1/matches/applications/{test_job.id}")
+    response = client.get(f"/api/v1/matches/applications/{job_id}")
     assert response.status_code == HTTPStatus.OK
     data = response.json()
     assert len(data) > 0
-    assert data[0]["job_id"] == test_job.id
+    assert data[0]["job_id"] == job_id
     assert data[0]["match_score"] == 0.85
