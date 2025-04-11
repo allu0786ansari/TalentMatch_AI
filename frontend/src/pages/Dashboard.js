@@ -4,14 +4,43 @@ import JobListings from "../components/JobListings";
 
 function Dashboard() {
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <ResumeUpload />
+    <div className="flex-grow-1 p-4">
+      <h1 className="mb-4">Dashboard</h1>
+      <p>Welcome to your dashboard! Use the navigation to explore the features.</p>
+      <div className="row mt-4">
+        {/* Resume Upload Section */}
+        <div className="col-md-6 mb-4">
+          <div>
+            <div>
+              <h5>Resume Upload</h5>
+              <p>Upload resumes and view parsed data.</p>
+              <ResumeUpload /> {/* Render ResumeUpload component */}
+            </div>
+          </div>
         </div>
-        <div>
-          <JobListings />
+
+        {/* Job Listings Section */}
+        <div className="col-md-6 mb-4">
+          <div>
+            <div>
+              <h5>Job Listings</h5>
+              <p>Manage job postings and descriptions.</p>
+              <JobListings /> {/* Render JobListings component */}
+            </div>
+          </div>
+        </div>
+
+        {/* Candidate Matching Section */}
+        <div className="col-md-6 mb-4">
+          <div>
+            <div>
+              <h5>Candidate Matching</h5>
+              <p>View matched candidates for job postings.</p>
+              <a href="/candidate-matching" className="btn btn-primary">
+                Go to Candidate Matching
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

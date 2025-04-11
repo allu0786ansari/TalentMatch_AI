@@ -1,25 +1,26 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
-import Jobs from "./pages/Jobs";
-import Matches from "./pages/Matches";
+import ResumeUpload from "./components/ResumeUpload";
+import JobListings from "./components/JobListings";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
 function App() {
   return (
     <Router>
-      <Navbar />
-      <div className="container mx-auto mt-4">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/jobs" element={<Jobs />} />
-          <Route path="/matches" element={<Matches />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-        </Routes>
-      </div>
+      <Routes>
+        {/* Wrap all routes with the Layout */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="ResumeUpload" element={<ResumeUpload />} />
+          <Route path="JobListings" element={<JobListings />} />
+          <Route path="CandidateMatches" element={<Dashboard />} />
+          <Route path="Login" element={<Login />} />
+          <Route path="Signup" element={<Signup />} />
+        </Route>
+      </Routes>
     </Router>
   );
 }
