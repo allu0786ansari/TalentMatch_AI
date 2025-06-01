@@ -1,6 +1,6 @@
 ﻿# TalentMatch_AI
 On-going project on multiple agent system
-- Backend is completed
+- Backend is completed with signin and signup authentication
 - Unit Testing is done using pytest
 - Now working on frontend part
 - Frontend is completed
