@@ -2,10 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-app = FastAPI()
-
 # Import local modules
-from app.routers import jobs, candidates, matches, interviews
+from app.routers import jobs, candidates, matches, interviews, auth  # Added auth router
 from app.database import engine
 from app.models import Base
 from app.config import settings
@@ -52,6 +50,12 @@ app.include_router(
     interviews.router,
     prefix="/api/v1/interviews",
     tags=["interviews"]
+)
+
+app.include_router(
+    auth.router,  # Added auth router
+    prefix="/api/v1",
+    tags=["auth"]
 )
 
 @app.get("/")

@@ -66,3 +66,20 @@ class Interview(InterviewBase):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)  # Updated
+
+# Authentication-related schemas
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+    name: str
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+class PasswordReset(BaseModel):
+    token_data: Dict[str, str]
+    new_password: str
