@@ -13,7 +13,7 @@ Base.metadata.create_all(bind=engine)
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="TalentMatch AI",
+    title="SmartRecruit-AI: A Scalable Recruitment Automation System",
     description="A Multi-Agent System for Streamlining Recruitment Processes",
     version="1.0.0"
 )
