@@ -69,7 +69,7 @@
 - PostgreSQL
 
 ### Backend Setup
-- git clone https://github.com/yourusername/smartrecruit-ai.git
+- git clone https://github.com/allu0786ansari/TalentMatch_AI.git
 - cd smartrecruit-ai/backend
 - pip install -r requirements.txt
 - cp .env.example .env # Update environment variables
