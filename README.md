@@ -80,8 +80,8 @@
 - npm install
 - npm start
   
-### Testing the each modules using pytest
+### Testing the each modules using pytest-Completed
 
-### Still in progress
+### Still in progress- Frontend Design
 
 
