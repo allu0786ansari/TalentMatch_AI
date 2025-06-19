@@ -77,3 +77,5 @@
 
 ### Frontend Setup
 
+### Testing the each modules using pytest
+
