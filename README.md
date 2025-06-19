@@ -76,6 +76,9 @@
 - uvicorn app.main:app --reload
 
 ### Frontend Setup
-
+- cd ../frontend
+- npm install
+- npm start
+  
 ### Testing the each modules using pytest
 
