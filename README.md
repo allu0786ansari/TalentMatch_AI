@@ -54,7 +54,7 @@
 
 - **Backend:** Python, FastAPI, LangChain, Gemini (Google Generative AI APIs), SQLAlchemy, Pydantic, RabbitMQ, Pytest
 - **Frontend:** React.js, Redux Toolkit, Material UI, Axios
-- **Database:** PostgreSQL (recommended)
+- **Database:** mysqllite
 - **Messaging:** RabbitMQ
 
 ---
@@ -69,4 +69,8 @@
 - PostgreSQL
 
 ### Backend Setup
-
+- git clone https://github.com/yourusername/smartrecruit-ai.git
+- cd smartrecruit-ai/backend
+- pip install -r requirements.txt
+- cp .env.example .env # Update environment variables
+- uvicorn app.main:app --reload
