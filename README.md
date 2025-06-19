@@ -74,3 +74,6 @@
 - pip install -r requirements.txt
 - cp .env.example .env # Update environment variables
 - uvicorn app.main:app --reload
+
+### Frontend Setup
+
